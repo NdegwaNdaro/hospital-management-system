@@ -1,0 +1,101 @@
+{
+  "patients": [
+    {
+      "id": 1783927591209,
+      "name": "keino",
+      "age": 67,
+      "gender": "Male",
+      "phone": "889909",
+      "condition": "hiv",
+      "status": "Registered"
+    },
+    {
+      "id": 1783927552377,
+      "name": "ANTONIO ",
+      "age": 63,
+      "gender": "Male",
+      "phone": "889007",
+      "condition": "checkup",
+      "status": "Registered"
+    },
+    {
+      "id": 1,
+      "name": "John Doe",
+      "age": 34,
+      "gender": "Male",
+      "phone": "0712 345 678",
+      "condition": "Routine checkup",
+      "status": "Checked In"
+    },
+    {
+      "id": 2,
+      "name": "Mary Smith",
+      "age": 28,
+      "gender": "Female",
+      "phone": "0722 555 444",
+      "condition": "Flu symptoms",
+      "status": "Waiting"
+    }
+  ],
+  "appointments": [
+    {
+      "id": 1,
+      "patientName": "John Doe",
+      "doctor": "Dr. Amina",
+      "time": "09:00",
+      "status": "Confirmed"
+    },
+    {
+      "id": 2,
+      "patientName": "Mary Smith",
+      "doctor": "Dr. Kamau",
+      "time": "11:30",
+      "status": "Pending"
+    }
+  ],
+  "doctors": [
+    {
+      "id": 1,
+      "name": "Dr. Amina",
+      "specialty": "General Medicine"
+    },
+    {
+      "id": 2,
+      "name": "Dr. Kamau",
+      "specialty": "Cardiology"
+    }
+  ],
+  "nurses": [
+    {
+      "id": 1,
+      "name": "Nurse Njeri",
+      "shift": "Morning"
+    },
+    {
+      "id": 2,
+      "name": "Nurse Otieno",
+      "shift": "Night"
+    }
+  ],
+  "billing": [
+    {
+      "id": 1,
+      "patientName": "John Doe",
+      "amount": 2500,
+      "status": "Paid"
+    },
+    {
+      "id": 2,
+      "patientName": "Mary Smith",
+      "amount": 1800,
+      "status": "Pending"
+    }
+  ],
+  "dashboard": {
+    "totalPatients": 4,
+    "totalDoctors": 2,
+    "totalNurses": 2,
+    "appointmentsToday": 2,
+    "revenue": 4300
+  }
+}
