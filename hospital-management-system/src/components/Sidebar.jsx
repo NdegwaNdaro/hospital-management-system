@@ -12,12 +12,14 @@ import {
   FaMoneyBill,
   FaWarehouse,
   FaUsersCog,
-  FaCog
+  FaCog,
+  FaLayerGroup
 } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 
 const menuItems = [
   { title: "Dashboard", path: "/", icon: <FaHospital /> },
+  { title: "HMS Modules", path: "/modules", icon: <FaLayerGroup /> },
   { title: "Patients", path: "/patients", icon: <FaUserInjured /> },
   { title: "Receptionist", path: "/receptionist", icon: <FaUserInjured /> },
   { title: "Doctors", path: "/doctors", icon: <FaUserMd /> },

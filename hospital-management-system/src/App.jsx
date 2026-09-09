@@ -13,6 +13,14 @@ import ICU from "./pages/ICU";
 import Wards from "./pages/Wards";
 import Insurance from "./pages/Insurance";
 import OperationTheatre from "./pages/OperationTheatre";
+import Laboratory from "./pages/laboratory";
+import Pharmacy from "./pages/Pharmacy";
+import BloodBank from "./pages/BloodBank";
+import Inventory from "./pages/Inventory";
+import HMSModules from "./pages/HMSModules";
+import Emergency from "./pages/Emergency";
+import Radiology from "./pages/Radiology";
+import Staff from "./pages/Staff";
 import DoctorLogin from "./pages/DoctorLogin";
 import DoctorDashboard from "./pages/DoctorDashboard";
 import { useAuth } from "./context/AuthContext";
@@ -40,6 +48,7 @@ function App() {
 
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Dashboard />} />
+        <Route path="modules" element={<HMSModules />} />
         <Route path="patients" element={<Patients />} />
         <Route path="receptionist" element={<Receptionist />} />
         <Route path="doctors" element={<Doctors />} />
@@ -52,6 +61,13 @@ function App() {
         <Route path="wards" element={<Wards />} />
         <Route path="insurance" element={<Insurance />} />
         <Route path="operation-theatre" element={<OperationTheatre />} />
+        <Route path="laboratory" element={<Laboratory />} />
+        <Route path="pharmacy" element={<Pharmacy />} />
+        <Route path="blood-bank" element={<BloodBank />} />
+        <Route path="inventory" element={<Inventory />} />
+        <Route path="emergency" element={<Emergency />} />
+        <Route path="radiology" element={<Radiology />} />
+        <Route path="staff" element={<Staff />} />
       </Route>
     </Routes>
   );

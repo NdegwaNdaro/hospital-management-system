@@ -39,6 +39,7 @@ function Dashboard() {
     appointmentsToday: 0,
     revenue: 0
   });
+  const [dateTime, setDateTime] = useState(new Date());
   const [patients, setPatients] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [nurses, setNurses] = useState([]);
@@ -96,10 +97,12 @@ function Dashboard() {
 
     loadDashboard();
     const intervalId = window.setInterval(loadDashboard, 10000);
+    const clockInterval = window.setInterval(() => setDateTime(new Date()), 1000);
 
     return () => {
       isMounted = false;
       window.clearInterval(intervalId);
+      window.clearInterval(clockInterval);
     };
   }, []);
 
@@ -158,7 +161,22 @@ function Dashboard() {
           </div>
           <div className="rounded-2xl border border-white/20 bg-white/10 px-4 py-3 backdrop-blur">
             <p className="text-sm text-blue-100">Live updates</p>
-            <p className="text-xl font-semibold">Refreshing every 10s</p>
+            <p className="text-xl font-semibold"></p>
+            <p className="mt-2 text-sm text-blue-100/90">
+              {dateTime.toLocaleDateString(undefined, {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+              })}
+            </p>
+            <p className="text-lg font-semibold">
+              {dateTime.toLocaleTimeString(undefined, {
+                hour: "numeric",
+                minute: "2-digit",
+                second: "2-digit"
+              })}
+            </p>
           </div>
         </div>
       </section>

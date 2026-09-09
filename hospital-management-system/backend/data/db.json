@@ -35,6 +35,36 @@
       "phone": "0722 555 444",
       "condition": "Flu symptoms",
       "status": "Waiting"
+    },
+    {
+      "name": "peter",
+      "age": 89,
+      "gender": "Male",
+      "phone": "00999",
+      "condition": "rehab\n",
+      "id": "1784735750432615",
+      "_id": "1784735750432615",
+      "createdAt": "2026-07-22T15:55:50.432Z"
+    },
+    {
+      "name": "diana ",
+      "age": 25,
+      "gender": "Female",
+      "phone": "07766655",
+      "condition": "clinic",
+      "id": "1784737269538655",
+      "_id": "1784737269538655",
+      "createdAt": "2026-07-22T16:21:09.538Z"
+    },
+    {
+      "name": "yan ",
+      "age": 11,
+      "gender": "Female",
+      "phone": "987878",
+      "condition": "clinic \n",
+      "id": "1784796119236251",
+      "_id": "1784796119236251",
+      "createdAt": "2026-07-23T08:41:59.236Z"
     }
   ],
   "appointments": [
@@ -51,6 +81,33 @@
       "doctor": "Dr. Kamau",
       "time": "11:30",
       "status": "Pending"
+    },
+    {
+      "patientName": "diana ",
+      "doctor": "Dr Cynthia Ndaro",
+      "time": "21:41",
+      "status": "Pending",
+      "id": "1784738506077596",
+      "_id": "1784738506077596",
+      "createdAt": "2026-07-22T16:41:46.077Z"
+    },
+    {
+      "patientName": "keino",
+      "doctor": "Dr cate ",
+      "time": "12:14",
+      "status": "Pending",
+      "id": "1784751295613944",
+      "_id": "1784751295613944",
+      "createdAt": "2026-07-22T20:14:55.613Z"
+    },
+    {
+      "patientName": "yan ",
+      "doctor": "Dr cate ",
+      "time": "00:44",
+      "status": "Pending",
+      "id": "1784796274838720",
+      "_id": "1784796274838720",
+      "createdAt": "2026-07-23T08:44:34.838Z"
     }
   ],
   "doctors": [
@@ -63,6 +120,56 @@
       "id": 2,
       "name": "Dr. Kamau",
       "specialty": "Cardiology"
+    },
+    {
+      "id": 3,
+      "name": "Dr. Wanjiku",
+      "specialty": "Pediatrics"
+    },
+    {
+      "id": 4,
+      "name": "Dr. Otieno",
+      "specialty": "Orthopedics"
+    },
+    {
+      "id": 5,
+      "name": "Dr. Njeri",
+      "specialty": "Dermatology"
+    },
+    {
+      "name": "Dr Cynthia Ndaro",
+      "specialty": "phychaltist ",
+      "phone": "0769601309",
+      "email": "cynthia@gmail.com",
+      "password": "wweta",
+      "shiftStart": "19:31",
+      "shiftEnd": "20:31",
+      "reportTime": "19:32",
+      "id": "1784737907181390",
+      "_id": "1784737907181390",
+      "createdAt": "2026-07-22T16:31:47.181Z"
+    },
+    {
+      "name": "Dr diana ndegwa",
+      "specialty": "dentist",
+      "phone": "0111815437",
+      "email": "diana@gmail.com",
+      "password": "0980",
+      "shiftStart": "07:00",
+      "shiftEnd": "13:43",
+      "reportTime": "19:30",
+      "id": "1784738659508740",
+      "_id": "1784738659508740",
+      "createdAt": "2026-07-22T16:44:19.509Z"
+    },
+    {
+      "name": "Dr cate ",
+      "specialty": "dentist",
+      "phone": "789757",
+      "email": "cate@gmail.com",
+      "id": "1784751250892835",
+      "_id": "1784751250892835",
+      "createdAt": "2026-07-22T20:14:10.893Z"
     }
   ],
   "nurses": [
@@ -97,5 +204,61 @@
     "totalNurses": 2,
     "appointmentsToday": 2,
     "revenue": 4300
-  }
+  },
+  "staff": [
+    {
+      "name": "maina ",
+      "role": "Nurse",
+      "department": "General",
+      "phone": "097799877",
+      "email": "maina@gmail.com",
+      "id": "1784737054497268",
+      "_id": "1784737054497268",
+      "createdAt": "2026-07-22T16:17:34.497Z"
+    },
+    {
+      "name": "maina mwangi ",
+      "role": "Nurse",
+      "department": "icu ",
+      "phone": "0202020202002",
+      "email": "maina345@gmail.com",
+      "id": "1786946301825469",
+      "_id": "1786946301825469",
+      "createdAt": "2026-08-17T05:58:21.825Z"
+    },
+    {
+      "name": "jane ",
+      "role": "Nurse",
+      "department": "General",
+      "phone": "908764",
+      "email": "jane@gmail.com",
+      "id": "1786946772961563",
+      "_id": "1786946772961563",
+      "createdAt": "2026-08-17T06:06:12.961Z"
+    }
+  ],
+  "ambulances": [
+    {
+      "id": 1,
+      "name": "Ambulance 01",
+      "driver": "Driver Njoroge",
+      "status": "En route",
+      "currentLocation": {
+        "lat": -1.2921,
+        "lng": 36.8219
+      },
+      "eta": "4 min"
+    },
+    {
+      "id": 2,
+      "name": "Ambulance 02",
+      "driver": "Driver Akinyi",
+      "status": "Available",
+      "currentLocation": {
+        "lat": -1.3,
+        "lng": 36.81
+      },
+      "eta": "2 min"
+    }
+  ]
 }

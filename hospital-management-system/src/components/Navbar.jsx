@@ -7,9 +7,6 @@ function Navbar() {
       </div>
 
       <div className="flex items-center gap-3">
-        <div className="hidden rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500 sm:block">
-          13 Jul 2026
-        </div>
         <div className="flex items-center gap-3 rounded-full border border-slate-200 bg-slate-50 px-3 py-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white">
             AD
