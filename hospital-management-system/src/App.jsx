@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import Dashboard from "./pages/Dashboard";
 import Patients from "./pages/Patients";
@@ -13,10 +13,31 @@ import ICU from "./pages/ICU";
 import Wards from "./pages/Wards";
 import Insurance from "./pages/Insurance";
 import OperationTheatre from "./pages/OperationTheatre";
+import DoctorLogin from "./pages/DoctorLogin";
+import DoctorDashboard from "./pages/DoctorDashboard";
+import { useAuth } from "./context/AuthContext";
+
+function PrivateDoctorRoute({ children }) {
+  const { isDoctor } = useAuth();
+  if (!isDoctor) {
+    return <Navigate to="/doctor-login" replace />;
+  }
+  return children;
+}
 
 function App() {
   return (
     <Routes>
+      <Route path="/doctor-login" element={<DoctorLogin />} />
+      <Route
+        path="/doctor-dashboard"
+        element={
+          <PrivateDoctorRoute>
+            <DoctorDashboard />
+          </PrivateDoctorRoute>
+        }
+      />
+
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Dashboard />} />
         <Route path="patients" element={<Patients />} />

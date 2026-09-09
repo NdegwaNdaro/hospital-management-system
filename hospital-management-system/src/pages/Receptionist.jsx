@@ -29,23 +29,39 @@ function Receptionist() {
   const [patientMessage, setPatientMessage] = useState("");
   const [doctorMessage, setDoctorMessage] = useState("");
   const [staffMessage, setStaffMessage] = useState("");
+  const [ambulances, setAmbulances] = useState([]);
+  const [ambulanceMessage, setAmbulanceMessage] = useState("");
 
   useEffect(() => {
     Promise.all([
       fetch("/api/patients").then((response) => response.json()).catch(() => []),
       fetch("/api/doctors").then((response) => response.json()).catch(() => []),
-      fetch("/api/staff").then((response) => response.json()).catch(() => [])
+      fetch("/api/staff").then((response) => response.json()).catch(() => []),
+      fetch("/api/ambulances").then((response) => response.json()).catch(() => [])
     ])
-      .then(([patientsData, doctorsData, staffData]) => {
+      .then(([patientsData, doctorsData, staffData, ambulancesData]) => {
         setPatients(patientsData);
         setDoctors(doctorsData);
         setStaffMembers(staffData);
+        setAmbulances(ambulancesData);
       })
       .catch(() => {
         setPatients([]);
         setDoctors([]);
         setStaffMembers([]);
+        setAmbulances([]);
       });
+  }, []);
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      fetch("/api/ambulances")
+        .then((response) => response.json())
+        .catch(() => [])
+        .then((data) => setAmbulances(data));
+    }, 8000);
+
+    return () => window.clearInterval(intervalId);
   }, []);
 
   function handlePatientChange(event) {
@@ -135,6 +151,23 @@ function Receptionist() {
       .catch(() => setStaffMessage("Unable to save staff record right now."));
   }
 
+  function handleAmbulancePing(ambulanceId) {
+    const lat = -1.2921 + (Math.random() - 0.5) * 0.02;
+    const lng = 36.8219 + (Math.random() - 0.5) * 0.02;
+
+    fetch(`/api/ambulances/${ambulanceId}/location`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ lat, lng, eta: "1 min", status: "En route" })
+    })
+      .then((response) => response.json())
+      .then((updatedAmbulance) => {
+        setAmbulances((prev) => prev.map((ambulance) => (ambulance._id === updatedAmbulance._id ? updatedAmbulance : ambulance)));
+        setAmbulanceMessage(`${updatedAmbulance.name} location refreshed.`);
+      })
+      .catch(() => setAmbulanceMessage("Unable to refresh ambulance location right now."));
+  }
+
   return (
     <div className="space-y-6">
       <section className="rounded-[24px] border border-slate-200/80 bg-gradient-to-br from-slate-900 to-slate-700 p-6 text-white shadow-lg shadow-slate-900/20 sm:p-8">
@@ -186,6 +219,63 @@ function Receptionist() {
           </div>
         </div>
       </div>
+
+      {ambulanceMessage ? (
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+          {ambulanceMessage}
+        </div>
+      ) : null}
+
+      <section className="rounded-[24px] border border-slate-200/80 bg-white p-6 shadow-sm">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-slate-500">GPS ambulance tracking</p>
+            <h3 className="mt-2 text-xl font-semibold text-slate-800">Track ambulance movement in real time</h3>
+            <p className="mt-1 text-sm text-slate-500">Reception can monitor the live location, driver, and ETA for each ambulance.</p>
+          </div>
+          <div className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">Live GPS updates</div>
+        </div>
+
+        <div className="mt-6 grid gap-4 xl:grid-cols-2">
+          {ambulances.map((ambulance) => (
+            <div key={ambulance._id} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="font-semibold text-slate-800">{ambulance.name}</p>
+                  <p className="mt-1 text-sm text-slate-500">Driver: {ambulance.driver}</p>
+                </div>
+                <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">{ambulance.status}</span>
+              </div>
+
+              <div className="mt-4 h-32 overflow-hidden rounded-xl border border-slate-200 bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.25),_transparent_35%),linear-gradient(135deg,_#e2f3ff_0%,_#f8fafc_100%)]">
+                <div className="relative h-full w-full">
+                  <div className="absolute inset-0 opacity-40 [background-image:linear-gradient(to_right,rgba(148,163,184,0.3)_1px,transparent_1px),linear-gradient(to_bottom,rgba(148,163,184,0.3)_1px,transparent_1px)] [background-size:24px_24px]" />
+                  <div className="absolute left-[24%] top-[30%] h-4 w-4 rounded-full bg-red-500 shadow-[0_0_0_8px_rgba(248,113,113,0.25)]" />
+                  <div className="absolute right-[18%] bottom-[24%] h-4 w-4 rounded-full bg-emerald-500 shadow-[0_0_0_8px_rgba(16,185,129,0.2)]" />
+                </div>
+              </div>
+
+              <div className="mt-4 grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
+                <div className="rounded-lg bg-white p-3">
+                  <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Lat / Lng</p>
+                  <p className="mt-1 font-semibold text-slate-800">{ambulance.currentLocation?.lat?.toFixed(4)} / {ambulance.currentLocation?.lng?.toFixed(4)}</p>
+                </div>
+                <div className="rounded-lg bg-white p-3">
+                  <p className="text-xs uppercase tracking-[0.2em] text-slate-400">ETA</p>
+                  <p className="mt-1 font-semibold text-slate-800">{ambulance.eta}</p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => handleAmbulancePing(ambulance._id)}
+                className="mt-4 rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+              >
+                Refresh GPS ping
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
 
       <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         <section className="rounded-[24px] border border-slate-200/80 bg-white p-6 shadow-sm">

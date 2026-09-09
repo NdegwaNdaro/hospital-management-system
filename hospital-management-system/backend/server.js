@@ -34,7 +34,11 @@ const doctorSchema = new mongoose.Schema({
   name: { type: String, required: true },
   specialty: { type: String, required: true },
   phone: { type: String, default: '' },
-  email: { type: String, default: '' }
+  email: { type: String, default: '' },
+  password: { type: String, default: '' },
+  shiftStart: { type: String, default: '' },
+  shiftEnd: { type: String, default: '' },
+  reportTime: { type: String, default: '' }
 }, { timestamps: true });
 
 const nurseSchema = new mongoose.Schema({
@@ -50,6 +54,17 @@ const staffSchema = new mongoose.Schema({
   email: { type: String, default: '' }
 }, { timestamps: true });
 
+const ambulanceSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  driver: { type: String, required: true },
+  status: { type: String, default: 'Available' },
+  currentLocation: {
+    lat: { type: Number, required: true },
+    lng: { type: Number, required: true }
+  },
+  eta: { type: String, default: '3 min' }
+}, { timestamps: true });
+
 const billingSchema = new mongoose.Schema({
   patientName: { type: String, required: true },
   amount: { type: Number, required: true },
@@ -61,6 +76,7 @@ const Appointment = mongoose.model('Appointment', appointmentSchema);
 const Doctor = mongoose.model('Doctor', doctorSchema);
 const Nurse = mongoose.model('Nurse', nurseSchema);
 const Staff = mongoose.model('Staff', staffSchema);
+const Ambulance = mongoose.model('Ambulance', ambulanceSchema);
 const Billing = mongoose.model('Billing', billingSchema);
 
 async function seedData() {
@@ -78,8 +94,8 @@ async function seedData() {
   ]);
 
   await Doctor.create([
-    { name: 'Dr. Amina', specialty: 'General Medicine' },
-    { name: 'Dr. Kamau', specialty: 'Cardiology' }
+    { name: 'Dr. Amina', specialty: 'General Medicine', password: 'dramina2024', shiftStart: '08:00', shiftEnd: '16:00', reportTime: '07:50' },
+    { name: 'Dr. Kamau', specialty: 'Cardiology', password: 'drkamau2024', shiftStart: '09:00', shiftEnd: '17:00', reportTime: '08:45' }
   ]);
 
   await Nurse.create([
@@ -90,6 +106,11 @@ async function seedData() {
   await Staff.create([
     { name: 'Jane Wambui', role: 'Nurse', department: 'ICU', phone: '0722 000 111' },
     { name: 'Kevin Kariuki', role: 'Receptionist', department: 'Front Desk', phone: '0711 222 333' }
+  ]);
+
+  await Ambulance.create([
+    { name: 'Ambulance 01', driver: 'Driver Njoroge', status: 'En route', currentLocation: { lat: -1.2921, lng: 36.8219 }, eta: '4 min' },
+    { name: 'Ambulance 02', driver: 'Driver Akinyi', status: 'Available', currentLocation: { lat: -1.3000, lng: 36.8100 }, eta: '2 min' }
   ]);
 
   await Billing.create([
@@ -195,7 +216,17 @@ app.get('/api/doctors', async (req, res) => {
 
 app.post('/api/doctors', async (req, res) => {
   try {
-    const doctor = await Doctor.create(req.body);
+    const doctor = await Doctor.create({
+      name: req.body.name || '',
+      specialty: req.body.specialty || '',
+      phone: req.body.phone || '',
+      email: req.body.email || '',
+      password: req.body.password || '',
+      shiftStart: req.body.shiftStart || '',
+      shiftEnd: req.body.shiftEnd || '',
+      reportTime: req.body.reportTime || ''
+    });
+
     res.status(201).json(doctor);
   } catch (error) {
     res.status(500).json({ error: 'Failed to create doctor' });
@@ -229,6 +260,41 @@ app.get('/api/staff', async (req, res) => {
   }
 });
 
+app.get('/api/ambulances', async (req, res) => {
+  try {
+    const ambulances = await Ambulance.find().sort({ createdAt: -1 });
+    res.json(ambulances);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to load ambulance tracking data' });
+  }
+});
+
+app.post('/api/ambulances/:id/location', async (req, res) => {
+  try {
+    const lat = Number(req.body.lat ?? req.body.latitude);
+    const lng = Number(req.body.lng ?? req.body.longitude);
+
+    const update = {
+      status: req.body.status || 'En route',
+      eta: req.body.eta || '2 min',
+      currentLocation: {
+        lat: Number.isFinite(lat) ? lat : -1.2921,
+        lng: Number.isFinite(lng) ? lng : 36.8219
+      }
+    };
+
+    const ambulance = await Ambulance.findByIdAndUpdate(req.params.id, update, { new: true });
+
+    if (!ambulance) {
+      return res.status(404).json({ error: 'Ambulance not found' });
+    }
+
+    res.json(ambulance);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update ambulance location' });
+  }
+});
+
 app.post('/api/staff', async (req, res) => {
   try {
     const staffMember = await Staff.create(req.body);
@@ -244,6 +310,24 @@ app.get('/api/billing', async (req, res) => {
     res.json(billing);
   } catch (error) {
     res.status(500).json({ error: 'Failed to load billing records' });
+  }
+});
+
+app.post('/api/billing/:id/pay', async (req, res) => {
+  try {
+    const bill = await Billing.findByIdAndUpdate(
+      req.params.id,
+      { status: 'Paid' },
+      { new: true }
+    );
+
+    if (!bill) {
+      return res.status(404).json({ error: 'Billing record not found' });
+    }
+
+    res.json(bill);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update billing status' });
   }
 });
 
